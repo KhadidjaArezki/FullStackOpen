@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const Weather = ({capital}) => {
   const [weatherData, setWeatherData] = useState({})
+
   const renderWeatherData = () => {
     if (Object.keys(weatherData).length === 0) return ''
     else {
