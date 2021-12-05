@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons.js'
+import Notification from './components/Notification.js'
+import './index.css'
 
 const Filter = ({value, handler}) => {
     return (
@@ -23,11 +25,17 @@ const Form = ({submitHandler, nameValue, nameChangeHandler, numberValue, numberC
         </form>
     )
 }
+const Person = ({person, handleDelete}) => {
+    return (
+        <li key={person.id}>
+            {person.name}: {person.number}
+            <button onClick={() => handleDelete(person.id)}>delete</button>
+        </li>
+    )
+}
+
 const People = ({personsToShow, deleteHandler}) => {
-    return personsToShow.map(person => <li key={person.id}>
-                                            {person.name}: {person.number}
-                                            <button onClick={() => deleteHandler(person.id)}>delete</button>
-                                         </li>)
+    return personsToShow.map(person => <Person person={person} handleDelete={deleteHandler}/>)
 }
 
 const App = () => {
@@ -36,6 +44,8 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [newSearch, setNewSearch] = useState('')
+    const [NotificationMessage, setNotificationMessage] = useState(null)
+    const [NotificationClass, setNotificationClass] = useState('')
 
     useEffect(() => {
         personService
@@ -43,6 +53,15 @@ const App = () => {
             .then(persons => setPersons(persons))
     }, [])
     
+    const notifyUser = (message, className) => {
+        setNewName('')
+        setNewNumber('')
+        setNotificationMessage(message)
+        setNotificationClass(className)
+        setTimeout(() => {
+            setNotificationMessage(null)
+        }, 5000)
+    }
     const addName = (event) => {
         event.preventDefault()
         // Check if name already exists
@@ -57,11 +76,23 @@ const App = () => {
                 }
                 personService
                     .updatePerson(changedPerson)
-                    .then(updatedPerson => 
+                    .then(updatedPerson => {
                         setPersons(persons.map(person => 
                             person.id !== updatedPerson.id? person : updatedPerson
                         ))
-                    )
+                        setNewName('')
+                        setNewNumber('')
+                        const message = `Updated ${updatedPerson.name}`
+                        notifyUser(message, 'success')
+                    })
+                    .catch(error => {
+                        console.error(error)
+                        personService
+                        .getPersons()
+                        .then(persons => setPersons(persons))
+                        const message = `${changedPerson.name} was already deleted`
+                        notifyUser(message, 'error')
+                    })
             }
         }
         else {
@@ -74,23 +105,36 @@ const App = () => {
                 .addPerson(newPerson)
                 .then(createdPerson => {
                     setPersons(persons.concat(createdPerson))
-                    setNewName('')
-                    setNewNumber('')
+                    const message = `Added ${createdPerson.name}`
+                    notifyUser(message, 'success')
                 })
-                .catch(error => console.error(error))
+                .catch(error => {
+                    console.error(error)
+                    const message = `${newPerson.name} cannot be added!`
+                    notifyUser(message, 'error')
+                })
         }
     }
 
     const deletePerson = (id) => {
         if (window.confirm('Are you sure you want to delete this perosn?')) {
+            const personName = persons.find(person => person.id === id).name
             personService
                 .deletePerson(id)
                 .then(() => {
                     personService
                         .getPersons()
-                        .then(persons => setPersons(persons))
+                        .then(persons => {
+                            setPersons(persons)
+                            const message = `${personName} successfully deleted`
+                            notifyUser(message, 'success')
+                        })
                 })
-                .catch(error => console.error(error))
+                .catch(error => {
+                    console.error(error)
+                    const message = `${personName} does not exist`
+                    notifyUser(message, 'error')
+                })
         }
     }
 
@@ -116,6 +160,7 @@ const App = () => {
     return (
       <div>
         <h2>Phonebook</h2>
+        <Notification message={NotificationMessage} messageClass={NotificationClass}/>
         <Filter value={newSearch} handler={handleSearchChange}/>
         <h3>Add New</h3>
         <Form submitHandler={addName} nameValue={newName} nameChangeHandler={handleNameChange} 
