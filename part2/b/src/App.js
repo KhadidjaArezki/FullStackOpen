@@ -90,7 +90,8 @@ const App = () => {
                         personService
                         .getPersons()
                         .then(persons => setPersons(persons))
-                        const message = `${changedPerson.name} was already deleted`
+                        // const message = `${changedPerson.name} was already deleted`
+                        const message = error.response.data.error
                         notifyUser(message, 'error')
                     })
             }
@@ -109,8 +110,8 @@ const App = () => {
                     notifyUser(message, 'success')
                 })
                 .catch(error => {
-                    console.error(error)
-                    const message = `${newPerson.name} cannot be added!`
+                    const message = error.response.data.error
+                    // const message = `${newPerson.name} cannot be added!`
                     notifyUser(message, 'error')
                 })
         }

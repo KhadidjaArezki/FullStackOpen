@@ -1,7 +1,7 @@
 import axios from 'axios'
+//'https://phonebook-backend-exercises.herokuapp.com/api/persons' 
 
-const baseUrl = 'http://localhost:3001/persons' 
-
+const baseUrl = '/api/persons' 
 const getPersons = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
