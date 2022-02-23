@@ -34,11 +34,11 @@ const Blog = ({ blog, changeBlog, removeBlog }) => {
   }
   return (
     <div style={blogStyle}>
-      <div style={detailsHidden}>
+      <div style={detailsHidden}className='blogBrief'>
         <span>{blog.title} </span>
         <button onClick={toggleVisibility}>view</button>
       </div>
-      <div style={detailsShown}>
+      <div style={detailsShown}className='blogDetails'>
         <div>
           <span>{blog.title} </span>
           <button onClick={toggleVisibility}>hide</button>
@@ -47,7 +47,7 @@ const Blog = ({ blog, changeBlog, removeBlog }) => {
         <p>url: {blog.url}</p>
         <div>
           <span>likes </span>
-          <button onClick={updateBlog}>{blog.likes}</button>
+          <button className='likes' onClick={updateBlog}>{blog.likes}</button>
         </div>
         <button
           style={{
