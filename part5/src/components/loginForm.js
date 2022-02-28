@@ -13,7 +13,7 @@ const LoginForm = ({ authenticate }) => {
   }
 
   return (
-    <form onSubmit={handleLogin}>
+    <form className='loginForm' onSubmit={handleLogin}>
       <div>
         username
         <input

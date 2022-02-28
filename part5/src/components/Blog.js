@@ -50,6 +50,7 @@ const Blog = ({ blog, changeBlog, removeBlog }) => {
           <button className='likes' onClick={updateBlog}>{blog.likes}</button>
         </div>
         <button
+          className='delete'
           style={{
             display: blog.user ? '' : 'none',
             backgroundColor: 'lightblue'
