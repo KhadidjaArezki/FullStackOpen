@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import Anecdote from './components/Anecdote'
 import Notification from './components/Notification'
+import { NotificationContextProvider } from './NotificationContext'
 import axios from 'axios'
 
 const baseUrl = 'http://localhost:3011/anecdotes'
@@ -30,18 +31,20 @@ const App = () => {
   const anecdotes = result.data
 
   return (
-    <div>
-      <h3>Anecdote app</h3>
-    
-      <Notification />
-      <AnecdoteForm />
-    
-      {anecdotes.map(anecdote =>
-        <Anecdote
-          key={anecdote.id}
-          anecdote={anecdote} />
-      )}
-    </div>
+    <NotificationContextProvider>
+      <div>
+        <h3>Anecdote app</h3>
+      
+        <Notification />
+        <AnecdoteForm />
+      
+        {anecdotes.map(anecdote =>
+          <Anecdote
+            key={anecdote.id}
+            anecdote={anecdote} />
+        )}
+      </div>
+    </NotificationContextProvider>
   )
 }
 
