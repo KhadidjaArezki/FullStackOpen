@@ -1,4 +1,4 @@
-import {  NewDiaryEntry, Weather } from '../types';
+import {  NewDiaryEntry, Weather, Visibility } from './types';
 
 const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
   if ( !object || typeof object !== 'object' ) {
