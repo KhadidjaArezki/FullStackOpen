@@ -1,55 +1,27 @@
-import {  NewDiaryEntry, Weather, Visibility } from './types';
+import { z } from 'zod';
+import {  Weather, Visibility } from './types';
 
-const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
-  if ( !object || typeof object !== 'object' ) {
-    throw new Error('Incorrect or missing data');
-  }
+/* The string method of Zod is used to define the required type (or schema in Zod terms).
+ * After that the value (which is of the type unknown) is parsed with the method parse,
+ * which returns the value in the required type or throws an exception.
+ */
 
-  if ('comment' in object && 'date' in object && 'weather' in object && 'visibility' in object)  {
-    const newEntry: NewDiaryEntry = {
-      weather: parseWeather(object.weather),
-      visibility: parseVisibility(object.visibility),
-      date: parseDate(object.date),
-      comment: parseComment(object.comment)
-    };
+export const NewEntrySchema = z.object({
+  weather: z.nativeEnum(Weather),
+  visibility: z.nativeEnum(Visibility),
+  date: z.string().date(),
+  comment: z.string().optional()
+});
 
-    return newEntry;
-  }
+//export const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
+//  return newEntrySchema.parse(object);
+//};
 
-  throw new Error('Incorrect data: some fields are missing');
-};
 
-const parseComment = (comment: unknown): string => {
-  if (!isString(comment)) {
-    throw new Error('Incorrect or missing comment');
-  }
-
-  return comment;
-};
-
-const parseDate = (date: unknown): string => {
-  if (!isString(date) || !isDate(date)) {
-      throw new Error('Incorrect or missing date: ' + date);
-  }
-  return date;
-};
-
-const parseWeather = (weather: unknown): Weather => {
-  if (!isString(weather) || !isWeather(weather)) {
-      throw new Error('Incorrect or missing weather: ' + weather);
-  }
-  return weather;
-};
-
-const parseVisibility = (visibility: unknown): Visibility => {
-  if (!isString(visibility) || !isVisibility(visibility)) {
-      throw new Error('Incorrect or missing visibility: ' + visibility);
-  }
-  return visibility;
-};
-
-// isString is a type guard.
-// 'text is string' is a type predicate. The general form of a type predicate is 'parameterName is Type'
+/* isString is a type guard.
+ * 'text is string' is a type predicate. The general form of a type predicate is 'parameterName is Type'
+ * The following are no longer needed
+ 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
@@ -65,5 +37,5 @@ const isWeather = (param: string): param is Weather => {
 const isVisibility = (param: string): param is Visibility => {
   return Object.values(Visibility).map(v => v.toString()).includes(param);
 };
-
-export default toNewDiaryEntry;
+*/
+export default NewEntrySchema;
