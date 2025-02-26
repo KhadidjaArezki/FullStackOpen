@@ -1,5 +1,15 @@
-import { NewPatientEntry, Gender } from './types'
+import { z } from 'zod'
+import { Gender } from './types'
 
+export const NewPatientEntrySchema = z.object({
+  name: z.string(),
+  dateOfBirth: z.string().date(),
+  ssn: z.string(),
+  gender: z.nativeEnum(Gender),
+  occupation: z.string()
+})
+
+/*
 const toNewPatientEntry = (object: unknown): NewPatientEntry => {
   if ( !object || typeof object !== 'object' ) {
     throw new Error('Incorrect or missing data');
@@ -70,5 +80,5 @@ const isDate = (date: string): boolean => {
 const isGender = (param: string): param is Gender => {
   return Object.values(Gender).map(v => v.toString()).includes(param);
 };
-
-export default toNewPatientEntry;
+*/
+export default NewPatientEntrySchema;

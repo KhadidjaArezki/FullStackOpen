@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/patients
+Content-Type: application/json
+
+{
+  "name": "hadhad jajy",
+  "dateOfBirth": "1990-08-18",
+  "ssn": "africa-ok",
+  "gender": "sigma",
+  "occupation": "master hesitator"
+}
