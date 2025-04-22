@@ -1,26 +1,11 @@
-type part = {
-  name: string,
-  exerciseCount: number
-}
-interface contentProps {
-  parts: part[],
-}
+import Part from './Part'
+import { CoursePart } from './App'
 
-const Content = (props: contentProps) => {
+const Content = (props: CoursePart[]) => {
   const { parts } = props
-  return (
-	  <>
-		  <p>
-        {parts[0].name} {parts[0].exerciseCount}
-      </p>
-      <p>
-        {parts[1].name} {parts[1].exerciseCount}
-      </p>
-      <p>
-        {parts[2].name} {parts[2].exerciseCount}
-      </p>
-		</>
-	)
+  return <>
+    {parts.map((part) => <Part key={part.name} part={part} />)}
+  </>
 }
 
 export default Content
